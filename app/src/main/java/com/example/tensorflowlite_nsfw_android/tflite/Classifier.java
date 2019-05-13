@@ -104,12 +104,11 @@ public abstract class Classifier {
      * Creates a classifier with the provided configuration.
      *
      * @param activity   The current Activity.
-     * @param model      The model to use for classification.
      * @param device     The device to use for classification.
      * @param numThreads The number of threads to use for classification.
      * @return A classifier with the desired configuration.
      */
-    public static Classifier create(Activity activity, Model model, Device device, int numThreads)
+    public static Classifier create(Activity activity,  Device device, int numThreads)
             throws IOException {
         return new ClassifierFloatMobileNet(activity, device, numThreads);
     }

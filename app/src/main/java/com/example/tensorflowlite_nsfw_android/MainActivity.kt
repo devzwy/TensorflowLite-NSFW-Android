@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (classifier == null)
-            classifier = Classifier.create(this, Classifier.Model.FLOAT, Classifier.Device.CPU, 10)
+            classifier = Classifier.create(this, Classifier.Device.CPU, 10)
         XLog.d("TensorflowLite", "开始识别")
         val startTime = Date().time
 
