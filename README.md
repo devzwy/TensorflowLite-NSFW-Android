@@ -27,7 +27,7 @@ pip install --ignore-installed --upgrade tensorflow==1.13.1
 
 6.下载PyCharm编译器
 
-7.导入open_nsfw的项目，修改检测图片绝对路径，运行项目可以得到类似如下值：  
+7.导入open_nsfw的项目，修改检测图片绝对路径，运行项目可以得到类似如下值(sfw:适宜在公共场所浏览，nsfw:不适宜在公共场所浏览，两者都是0-1中间的浮点型值，nsfw数值越大表示色情程度越高，sfw反之)：  
 ![nsfw_img](https://github.com/devzwy/TensorflowLite-NSFW-Android/blob/master/img/nsfw_img.png)
 
 
@@ -35,7 +35,7 @@ pip install --ignore-installed --upgrade tensorflow==1.13.1
 
 9.参考本demo
 
-10.运行demo，获取类似如下结果值：  
+10.运行demo，获取类似如下结果值(sfw:适宜在公共场所浏览，nsfw:不适宜在公共场所浏览，两者都是0-1中间的浮点型值，nsfw数值越大表示色情程度越高，sfw反之)：  
 
 
 ![nsfw_img](https://github.com/devzwy/TensorflowLite-NSFW-Android/blob/master/img/aaaaa.png)
