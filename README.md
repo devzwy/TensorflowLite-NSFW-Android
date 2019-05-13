@@ -35,3 +35,7 @@ pip install --ignore-installed --upgrade tensorflow==1.13.1
 
 9.参考本demo
 
+10.运行demo，获取类似如下结果值：  
+
+
+![nsfw_img](https://github.com/devzwy/TensorflowLite-NSFW-Android/blob/master/img/aaaaa.png)
