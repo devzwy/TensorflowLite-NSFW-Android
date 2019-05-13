@@ -30,9 +30,9 @@ public class ClassifierFloatMobileNet extends Classifier {
      *
      * @param activity
      */
-    public ClassifierFloatMobileNet(Activity activity, Device device, int numThreads)
+    public ClassifierFloatMobileNet(Activity activity, Boolean isAddGpuDelegate, int numThreads)
             throws IOException {
-        super(activity, device, numThreads);
+        super(activity, isAddGpuDelegate, numThreads);
     }
 
     @Override
@@ -47,25 +47,12 @@ public class ClassifierFloatMobileNet extends Classifier {
 
     @Override
     protected String getModelPath() {
-        // you can download this file from
-        // see build.gradle for where to obtain this file. It should be auto
-        // downloaded into assets.
         return "nsfw.tflite";
     }
 
     @Override
     protected int getNumBytesPerChannel() {
         return 4; // Float.SIZE / Byte.SIZE;
-    }
-
-    @Override
-    protected void addPixelValue(int pixelValue) {
-
-//        int red = (pixelValue >> 16) & 0xFF;
-//        int green = (pixelValue >> 8) & 0xFF;
-//        int blue = (pixelValue >> 0) & 0xFF;
-//        int out = (blue << 16) | (green << 8) | (red << 0);
-//        imgData.putFloat(Float.parseFloat(String.valueOf(out)));
     }
 
 }

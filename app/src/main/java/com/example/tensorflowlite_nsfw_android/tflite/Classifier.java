@@ -1,17 +1,3 @@
-/* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
 
 package com.example.tensorflowlite_nsfw_android.tflite;
 
@@ -21,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.SystemClock;
-import android.os.Trace;
 import android.support.annotation.RequiresApi;
 import com.zwy.xlog.XLog;
 import org.tensorflow.lite.Interpreter;
@@ -33,18 +18,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Date;
 
 /**
  * A classifier specialized to label images using TensorFlow Lite.
  */
 public abstract class Classifier {
-
-    /**
-     * The model type used for classification.
-     */
-    public enum Model {
-        FLOAT,
-    }
 
     /**
      * The runtime device type used for executing classification.
@@ -54,11 +33,6 @@ public abstract class Classifier {
         NNAPI,
         GPU
     }
-
-    /**
-     * Number of results to show in the UI.
-     */
-    private static final int MAX_RESULTS = 3;
 
     /**
      * Dimensions of inputs.
@@ -104,13 +78,12 @@ public abstract class Classifier {
      * Creates a classifier with the provided configuration.
      *
      * @param activity   The current Activity.
-     * @param device     The device to use for classification.
      * @param numThreads The number of threads to use for classification.
      * @return A classifier with the desired configuration.
      */
-    public static Classifier create(Activity activity,  Device device, int numThreads)
+    public static Classifier create(Activity activity,  Boolean isAddGpuDelegate, int numThreads)
             throws IOException {
-        return new ClassifierFloatMobileNet(activity, device, numThreads);
+        return new ClassifierFloatMobileNet(activity, isAddGpuDelegate, numThreads);
     }
 
     /**
@@ -120,18 +93,11 @@ public abstract class Classifier {
     /**
      * Initializes a {@code Classifier}.
      */
-    protected Classifier(Activity activity, Device device, int numThreads) throws IOException {
+    protected Classifier(Activity activity, Boolean isAddGpuDelegate, int numThreads) throws IOException {
         tfliteModel = loadModelFile(activity);
-        switch (device) {
-            case NNAPI:
-                tfliteOptions.setUseNNAPI(true);
-                break;
-            case GPU:
-                gpuDelegate = new GpuDelegate();
-                tfliteOptions.addDelegate(gpuDelegate);
-                break;
-            case CPU:
-                break;
+        if (isAddGpuDelegate) {
+            gpuDelegate = new GpuDelegate();
+            tfliteOptions.addDelegate(gpuDelegate);
         }
         tfliteOptions.setNumThreads(numThreads);
         tflite = new Interpreter(tfliteModel, tfliteOptions);
@@ -198,22 +164,15 @@ public abstract class Classifier {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public NsfwBean run(Bitmap bitmap) {
-        Trace.beginSection("recognizeImage");
-
-        Trace.beginSection("preprocessBitmap");
+        XLog.d("TensorflowLite", "开始转换图片");
+        Long startTime_ = new Date().getTime();
         convertBitmapToByteBuffer(bitmap);
-        Trace.endSection();
-
-        // Run the inference call.
-        Trace.beginSection("runInference");
+        XLog.d("TensorflowLite", "转换成功，耗时:" + (new Date().getTime() - startTime_) + "ms");
         long startTime = SystemClock.uptimeMillis();
         float[][] labelProbArray = new float[1][2];
         tflite.run(imgData, labelProbArray);
         long endTime = SystemClock.uptimeMillis();
-        Trace.endSection();
-        XLog.d("TensorflowLite", "Timecost to run model inference: " + (endTime - startTime));
-        XLog.d("TensorflowLite", labelProbArray[0].toString());
-        Trace.endSection();
+        XLog.d("TensorflowLite", "Timecost to run model inference: " + (endTime - startTime) + "ms");
         return new NsfwBean(labelProbArray[0][0], labelProbArray[0][1]);
     }
 
@@ -261,13 +220,6 @@ public abstract class Classifier {
      * @return
      */
     protected abstract int getNumBytesPerChannel();
-
-    /**
-     * Add pixelValue to byteBuffer.
-     *
-     * @param pixelValue
-     */
-    protected abstract void addPixelValue(int pixelValue);
 
 
     public static final class NsfwBean {

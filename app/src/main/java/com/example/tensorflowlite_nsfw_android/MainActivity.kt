@@ -19,19 +19,18 @@ class MainActivity : AppCompatActivity() {
 
 
         if (classifier == null)
-            classifier = Classifier.create(this, Classifier.Device.CPU, 10)
+            classifier = Classifier.create(this, true, 1)
+
+
+        val b = Bitmap.createScaledBitmap(
+            BitmapFactory.decodeStream(getResources().getAssets().open("aaa.png")),
+            224,
+            224,
+            false
+        )
         XLog.d("TensorflowLite", "开始识别")
         val startTime = Date().time
-
-
-        val nsfwBean = classifier?.run(
-            Bitmap.createScaledBitmap(
-                BitmapFactory.decodeStream(getResources().getAssets().open("aaa.png")),
-                224,
-                224,
-                false
-            )
-        )
+        val nsfwBean = classifier?.run(b)
 
         XLog.d("TensorflowLite", "识别成功：耗时${Date().time - startTime} ms,nsfw:${nsfwBean}")
     }
