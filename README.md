@@ -22,7 +22,7 @@ source activate venv
 pip install --ignore-installed --upgrade tensorflow==1.13.1
 ```
 
-5.[克隆open_nsfw项目](https://github.com/yahoo/open_nsfw.git)
+5.[克隆open_nsfw项目](https://github.com/devzwy/NSFW-Python)
 
 
 6.下载PyCharm编译器
