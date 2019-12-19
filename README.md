@@ -39,5 +39,6 @@ pip install --ignore-installed --upgrade tensorflow==1.13.1
 
 10.运行demo，获取类似如下结果值(sfw:适宜在公共场所浏览，nsfw:不适宜在公共场所浏览，两者都是0-1中间的浮点型值，nsfw数值越大表示色情程度越高，sfw反之)：  
 
+11.移动端推荐使用tflite文件，PC端推荐使用pb模型
 
 ![nsfw_img](https://github.com/devzwy/TensorflowLite-NSFW-Android/blob/master/img/aaaaa.png)
